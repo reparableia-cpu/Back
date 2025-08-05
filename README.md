@@ -14,12 +14,21 @@ export OPENAI_API_KEY=tu_api_key_aqui
 
 ## Ejecución
 
+### Desarrollo Local
 **Desde el directorio raíz del proyecto:**
 ```bash
 python src/main.py
 ```
 
-El servidor se ejecutará en `http://localhost:5000`
+### Producción (con Gunicorn)
+```bash
+gunicorn --bind 0.0.0.0:5000 src.main:app
+```
+
+### Para deployment en plataformas como Render:
+**Start Command**: `gunicorn --bind 0.0.0.0:$PORT src.main:app`
+
+El servidor se ejecutará en `http://localhost:5000` (desarrollo) o en el puerto especificado (producción)
 
 ## Características
 
