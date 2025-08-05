@@ -9,8 +9,17 @@ from typing import Dict, List, Any, Optional
 
 ai_assistant_bp = Blueprint("ai_assistant", __name__)
 
-# Configurar cliente OpenAI
-client = openai.OpenAI()
+# Configurar cliente OpenAI (inicialización diferida)
+client = None
+
+def get_openai_client():
+    global client
+    if client is None:
+        api_key = os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            raise Exception("OPENAI_API_KEY environment variable is not set")
+        client = openai.OpenAI(api_key=api_key)
+    return client
 
 class AIAssistant:
     """Asistente de IA con capacidades de chat y generación de código"""
@@ -135,7 +144,7 @@ if __name__ == '__main__':
             messages.append({"role": "user", "content": message})
             
             # Llamar a OpenAI
-            response = client.chat.completions.create(
+            response = get_openai_client().chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
                 max_tokens=1500,
@@ -186,7 +195,7 @@ if __name__ == '__main__':
             Proporciona solo el código sin explicaciones adicionales.
             """
             
-            response = client.chat.completions.create(
+            response = get_openai_client().chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=2000,

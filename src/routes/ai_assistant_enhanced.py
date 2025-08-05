@@ -11,8 +11,17 @@ import re
 
 ai_assistant_bp = Blueprint("ai_assistant", __name__)
 
-# Configurar cliente OpenAI
-client = openai.OpenAI()
+# Configurar cliente OpenAI (inicialización diferida)
+client = None
+
+def get_openai_client():
+    global client
+    if client is None:
+        api_key = os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            raise Exception("OPENAI_API_KEY environment variable is not set")
+        client = openai.OpenAI(api_key=api_key)
+    return client
 
 class EnhancedAIAssistant:
     """Asistente de IA mejorado con capacidades de búsqueda en internet"""
@@ -242,7 +251,7 @@ Responde de manera clara, concisa y práctica. Si generas código, incluye comen
             messages.append({"role": "user", "content": enhanced_message})
             
             # Llamar a OpenAI
-            response = client.chat.completions.create(
+            response = get_openai_client().chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
                 max_tokens=1500,
@@ -330,7 +339,7 @@ Responde de manera clara, concisa y práctica. Si generas código, incluye comen
                     search_info += f"- {result['content']}\n"
                 prompt += search_info
             
-            response = client.chat.completions.create(
+            response = get_openai_client().chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=2000,
