@@ -88,3 +88,7 @@ python-slugify==8.0.5
 faker==33.1.0
 arrow==2.0.1
 humanize==4.11.0
+
+# Sandbox & Code Execution
+docker==7.2.0
+psutil==7.0.0

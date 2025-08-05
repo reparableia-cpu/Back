@@ -10,6 +10,7 @@ from src.routes.user import user_bp
 from src.routes.ai_assistant_enhanced import ai_assistant_bp
 from src.routes.self_repair import self_repair_bp
 from src.routes.autonomous_deploy import autonomous_deploy_bp
+from src.routes.sandbox import sandbox_bp
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = 'asdf#FGSgvasgf$5$WGT'
@@ -22,6 +23,7 @@ app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(ai_assistant_bp, url_prefix='/api/ai')
 app.register_blueprint(self_repair_bp, url_prefix='/api/repair')
 app.register_blueprint(autonomous_deploy_bp, url_prefix='/api/deploy')
+app.register_blueprint(sandbox_bp, url_prefix='/api/sandbox')
 
 # Configurar base de datos
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'database', 'app.db')}"
