@@ -1,0 +1,33 @@
+# Configuración opcional para Render.com
+# Este archivo puede ser usado para automatizar el deployment
+
+services:
+  - type: web
+    name: reparableia-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT src.main:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: DATABASE_URL
+        value: sqlite:///./database/app.db
+    healthCheckPath: /api/sandbox/health
+    
+  - type: static
+    name: reparableia-frontend
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_VERSION
+        value: "18.19.0"
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: reparableia-backend
+          property: host

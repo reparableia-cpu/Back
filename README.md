@@ -30,6 +30,29 @@ gunicorn --bind 0.0.0.0:5000 src.main:app
 
 El servidor se ejecutará en `http://localhost:5000` (desarrollo) o en el puerto especificado (producción)
 
+## 🚀 Deployment en Render.com
+
+### Configuración Rápida
+1. **Build Command**: `pip install -r requirements.txt`
+2. **Start Command**: `gunicorn --bind 0.0.0.0:$PORT src.main:app`
+3. **Health Check Path**: `/api/sandbox/health`
+
+### Variables de Entorno Requeridas
+```bash
+FLASK_ENV=production
+SECRET_KEY=tu_clave_secreta_muy_larga
+CORS_ORIGINS=https://tu-frontend-url.onrender.com
+```
+
+### Variables Opcionales
+```bash
+OPENAI_API_KEY=tu_api_key_para_funciones_ia
+DATABASE_URL=sqlite:///./database/app.db
+REDIS_URL=redis://localhost:6379/0
+```
+
+📖 **Ver guía completa en**: `RENDER_DEPLOYMENT_GUIDE.md`
+
 ## Características
 
 - API REST con Flask
